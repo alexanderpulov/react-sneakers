@@ -3,77 +3,28 @@ import Header from "./components/Header";
 import Drawer from "./components/Drawer";
 import React, { useState } from "react";
 
-const arr = [
-  {
-    title: "Мужские Кроссовки Nike Blazer Mid Suede",
-    price: 3999,
-    imageUrl: "./img/sneakers/1.jpg",
-  },
-  {
-    title: "Мужские Кроссовки Nike Air Max 270",
-    price: 3999,
-    imageUrl: "./img/sneakers/2.jpg",
-  },
-  {
-    title: "Мужские Кроссовки Nike Blazer Mid Suede",
-    price: 2999,
-    imageUrl: "./img/sneakers/3.jpg",
-  },
-  {
-    title: "Кроссовки Puma X Aka Boku Future Rider",
-    price: 2999,
-    imageUrl: "./img/sneakers/4.jpg",
-  },
-
-  {
-    title: "Мужские Кроссовки Under Armour Curry 8",
-    price: 4199,
-    imageUrl: "./img/sneakers/5.jpg",
-  },
-  {
-    title: "Мужские Кроссовки Nike Kyrie 7",
-    price: 3540,
-    imageUrl: "./img/sneakers/6.jpg",
-  },
-  {
-    title: "Мужские Кроссовки Jordan Air Jordan 11",
-    price: 3999,
-    imageUrl: "./img/sneakers/7.jpg",
-  },
-  {
-    title: "Мужские Кроссовки Nike LeBron XVIII",
-    price: 5499,
-    imageUrl: "./img/sneakers/8.jpg",
-  },
-
-  {
-    title: "Мужские Кроссовки Nike Lebron XVIII Low",
-    price: 5499,
-    imageUrl: "./img/sneakers/9.jpg",
-  },
-  {
-    title: "Мужские Кроссовки Nike Blazer Mid Suede",
-    price: 3999,
-    imageUrl: "./img/sneakers/10.jpg",
-  },
-  {
-    title: "Кроссовки Puma X Aka Boku Future Rider",
-    price: 2999,
-    imageUrl: "./img/sneakers/11.jpg",
-  },
-  {
-    title: "Мужские Кроссовки Nike Kyrie Flytrap IV",
-    price: 3540,
-    imageUrl: "./img/sneakers/12.jpg",
-  },
-];
-
 function App() {
+  const [items, setItems] = React.useState([]);
+  const [cartItems, setCartItems] = React.useState([]);
   const [cartOpened, setCartOpened] = React.useState(false);
+
+  React.useEffect(() => {
+    fetch("https://65030766a0f2c1f3faeb4fda.mockapi.io/items")
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => setItems(json));
+  }, []);
+
+  const onAddToCart = (obj) => {
+    setCartItems((prev) => [...prev, obj]);
+  };
 
   return (
     <div className="wrapper clear">
-      {cartOpened ? <Drawer onClose={() => setCartOpened(false)} /> : null}
+      {cartOpened ? (
+        <Drawer items={cartItems} onClose={() => setCartOpened(false)} />
+      ) : null}
 
       <Header onClickCart={() => setCartOpened(true)} />
 
@@ -87,8 +38,14 @@ function App() {
         </div>
 
         <div className="d-flex justify-between flex-wrap">
-          {arr.map((x) => (
-            <Card title={x.title} imageUrl={x.imageUrl} price={x.price} />
+          {items.map((item) => (
+            <Card
+              title={item.title}
+              imageUrl={item.imageUrl}
+              price={item.price}
+              onFavorite={() => console.log("товар дабавлен в закладки")}
+              onPlus={(obj) => onAddToCart(obj)}
+            />
           ))}
         </div>
       </div>

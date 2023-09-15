@@ -1,11 +1,11 @@
-function Drawer(props) {
+function Drawer({ onClose, items = [], remove }) {
   return (
     <div className="overlay">
       <div className="drawer d-flex flex-column">
         <h2 className="d-flex align-center justify-between mb-30">
           Корзина
           <img
-            onClick={props.onClose}
+            onClick={onClose}
             className="removeBtn"
             src="/img/btn-remove.svg"
             alt="Close"
@@ -13,29 +13,23 @@ function Drawer(props) {
         </h2>
 
         <div className="items flex">
-          <div className="cartItem d-flex align-center mb-20">
-            <div
-              className="cartItemImg"
-              style={{ backgroundImage: "url(/img/sneakers/1.jpg)" }}
-            ></div>
-            <div className="mr-15">
-              <p className="mb-5">Мужские Кроссовки Nike Air Max 270</p>
-              <b>3999 грн.</b>
+          {items.map((obj) => (
+            <div className="cartItem d-flex align-center mb-20">
+              <div
+                className="cartItemImg"
+                style={{ backgroundImage: `url(${obj.imageUrl}` }}
+              ></div>
+              <div className="mr-15">
+                <p className="mb-5">{obj.title}</p>
+                <b>{obj.price}</b>
+              </div>
+              <img
+                className="removeBtn"
+                src="/img/btn-remove.svg"
+                alt="Remove"
+              />
             </div>
-            <img className="removeBtn" src="/img/btn-remove.svg" alt="Remove" />
-          </div>
-
-          <div className="cartItem d-flex align-center mb-20">
-            <div
-              className="cartItemImg"
-              style={{ backgroundImage: "url(/img/sneakers/1.jpg)" }}
-            ></div>
-            <div className="mr-15">
-              <p className="mb-5">Мужские Кроссовки Nike Air Max 270</p>
-              <b>3999 грн.</b>
-            </div>
-            <img className="removeBtn" src="/img/btn-remove.svg" alt="Remove" />
-          </div>
+          ))}
         </div>
 
         <div className="cartTotalBlock">
