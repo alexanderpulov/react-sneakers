@@ -1,12 +1,13 @@
 import Card from "./components/Card/Card";
 import Header from "./components/Header";
 import Drawer from "./components/Drawer";
-import React, {useState} from "react";
+import React from "react";
 
 function App() {
     const [items, setItems] = React.useState([]);
     const [cartItems, setCartItems] = React.useState([]);
     const [cartOpened, setCartOpened] = React.useState(false);
+    const [searchValue, setSearchValue] = React.useState("")
 
     React.useEffect(() => {
         fetch("https://65030766a0f2c1f3faeb4fda.mockapi.io/items")
@@ -24,35 +25,46 @@ function App() {
         setCartItems(cartItems.filter(c => c.id !== id))
     }
 
-    return (<div className="wrapper clear">
-        {cartOpened ? (<Drawer cartItems={cartItems}
-                               onClose={() => setCartOpened(false)}
-                               deleteItemFromCard={deleteItemFromCard}
-        />) : null}
+    const onChangeSearchInput = (event) => {
+        setSearchValue(event.currentTarget.value)
+    }
 
-        <Header onClickCart={() => setCartOpened(true)}/>
+    return (
+        <div className="wrapper clear">
+            {cartOpened ? (<Drawer cartItems={cartItems}
+                                   onClose={() => setCartOpened(false)}
+                                   deleteItemFromCard={deleteItemFromCard} />) : null}
 
-        <div className="content p-40">
-            <div className="mb-40 d-flex align-center justify-between">
-                <h1>Все кроссовки</h1>
-                <div className="search-block d-flex">
-                    <img src="../img/search.svg" alt="Search"/>
-                    <input type="text" placeholder="Поиск..."/>
+            <Header onClickCart={() => setCartOpened(true)}/>
+
+            <div className="content p-40">
+                <div className="mb-40 d-flex align-center justify-between">
+                    <h1>{searchValue ? `Поиск по запросу: ${searchValue}` : "Все кроссовки"}</h1>
+                    <div className="search-block d-flex">
+                        <img src="../img/search.svg" alt="Search"/>
+                        <div>
+                            <input value={searchValue} onChange={onChangeSearchInput} type="text" placeholder="Поиск..."/>
+                            {searchValue && <button className={"inputX"} onClick={() => setSearchValue("")}>x</button>}
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div className="d-flex flex-wrap">
+                    {items.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase())).map(item => <Card
+                        title={item.title}
+                        id={item.id}
+                        key={item.id}
+                        imageUrl={item.imageUrl}
+                        price={item.price}
+                        onFavorite={() => console.log("товар дабавлен в закладки")}
+                        onPlus={(obj) => onAddToCart(obj)}
+                    />)}
                 </div>
             </div>
-
-            <div className="d-flex flex-wrap">
-                {items.map((item) => (<Card
-                    title={item.title}
-                    id={item.id}
-                    imageUrl={item.imageUrl}
-                    price={item.price}
-                    onFavorite={() => console.log("товар дабавлен в закладки")}
-                    onPlus={(obj) => onAddToCart(obj)}
-                />))}
-            </div>
         </div>
-    </div>);
+    );
 }
 
 export default App;
