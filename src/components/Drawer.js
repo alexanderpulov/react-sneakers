@@ -14,7 +14,7 @@ function Drawer({onClose, cartItems, deleteItemFromCard, remove}) {
                     />
                 </h2>
 
-                <div className="items flex">
+                {cartItems.length > 0 ? <div className="items flex">
                     {cartItems.map((obj) => (
                         <div className="cartItem d-flex align-center mb-20">
                             <div
@@ -33,7 +33,8 @@ function Drawer({onClose, cartItems, deleteItemFromCard, remove}) {
                             />
                         </div>
                     ))}
-                </div>
+                </div> : <div className="items flex">Корзина пуста</div>}
+
 
                 <div className="cartTotalBlock">
                     <ul>
